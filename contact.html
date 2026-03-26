@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Homework 1</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <style>
+        .page-heading {
+            background-color: rgb(253, 230, 230);
+            padding: 30px;
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 300px;
+        }
+
+        .map-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .map-wrapper {
+                height: 450px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .map-wrapper {
+                height: 550px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1>Molly Tea <img src="images/logo.png" alt="Molly Tea Logo"
+                    style="width:50px;height:50px;position: relative; top: 10px;" /></h1>
+        </div>
+    </header>
+
+    <nav>
+        <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul id="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+    </nav>
+
+    <h1 class="page-heading">Contact Us</h1>
+
+    <div class="container" style="flex-direction: column; align-items: center; padding: 40px; gap: 40px;">
+        <div class="map-wrapper" style="width: 100%; max-width: 800px;">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3027.7353308101337!2d-74.01149482331927!3d40.63571847140513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c245c3d0b44f93%3A0x14a06049f0e43a02!2sMolly%20Tea!5e0!3m2!1sen!2sus!4v1773024291640!5m2!1sen!2sus"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <form action="/action_page.php">
+            <label for="name">Enter Name:</label><br>
+            <input type="text" id="name" name="name" placeholder="John Doe"><br>
+            <label for="email">Enter Email:</label><br>
+            <input type="text" id="email" name="email" placeholder="john.doe@example.com"><br>
+            <label for="msg">Enter Message:</label><br>
+            <input type="text" id="msg" name="msg" placeholder="I love Molly Tea!"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div>
+                <h3>Business Hours</h3>
+                <p>Monday - Friday: 9:00 AM - 9:00 PM</p>
+                <p>Saturday - Sunday: 10:00 AM - 10:00 PM</p>
+            </div>
+            <div>
+                <h3>Social Media</h3>
+                <p><a href="https://www.instagram.com/mollytea_global/">Instagram</a></p>
+                <p><a
+                        href="https://www.douyin.com/user/MS4wLjABAAAA_Ru-9VC248Ojr5IiOSsab9L-AK68vwXuS57Ar2aiDTC-alnEKDCBsjv2NRge1_rG">Douyin</a>
+                </p>
+            </div>
+        </div>
+        <hr style="color: #FFFFFF;" />
+        <p>&copy; 2026 Molly Tea. All rights reserved.</p>
+    </footer>
+    <script src="hamburger.js"></script>
+
+</body>
+
+</html>

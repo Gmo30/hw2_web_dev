@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Homework 1</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="global.css">
+    <style>
+        .page-heading {
+            background-color: rgb(253, 230, 230);
+            padding: 30px;
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+        }
+        .cart-toggle-bar {
+            padding: 0.6rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .cart-toggle-btn {
+            background: #2a1a1a;
+            color: #fdf6ec;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.18s;
+        }
+
+        .cart-toggle-btn:hover {
+            background: #b85c5c;
+        }
+
+        .cart-badge {
+            background: #b85c5c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-badge.hidden {
+            display: none;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+            padding: 2.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: margin-right 0.35s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .menu-grid.cart-open {
+            margin-right: 360px;
+        }
+
+        .menu-card {
+            background: #fff;
+            border: 1px solid #f0e6e6;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            animation: cardFadeUp 0.4s ease both;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(180, 100, 100, 0.1);
+        }
+
+        @keyframes cardFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .menu-card:nth-child(2) {
+            animation-delay: 0.10s;
+        }
+
+        .menu-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .menu-card:nth-child(4) {
+            animation-delay: 0.20s;
+        }
+
+        .menu-card img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-body {
+            padding: 1.1rem 1.2rem 1.4rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #2a1a1a;
+            line-height: 1.3;
+        }
+
+        .card-price {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #b85c5c;
+            letter-spacing: 0.02em;
+        }
+
+        .card-desc {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 300;
+            color: #6a5050;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 0.9rem;
+        }
+
+        .add-btn {
+            background: #2a1a1a;
+            color: #fdf6ec;
+            border: none;
+            padding: 0.45rem 1.1rem;
+            border-radius: 50px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.1s;
+        }
+
+        .add-btn:hover {
+            background: #b85c5c;
+        }
+
+        .add-btn:active {
+            transform: scale(0.96);
+        }
+
+        .add-btn.added {
+            background: #4a7c59;
+        }
+
+        .cart-panel {
+            width: 360px;
+            background: #fffaf7;
+            border-left: 1px solid #f0e0e0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(.4, 0, .2, 1);
+            z-index: 200;
+            box-shadow: -6px 0 32px rgba(44, 26, 14, 0.08);
+        }
+
+        .cart-panel.open {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            background: rgb(253, 230, 230);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0d8d8;
+            flex-shrink: 0;
+        }
+
+        .cart-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            color: #2a1a1a;
+        }
+
+        .close-cart-btn {
+            background: none;
+            border: 1px solid #d4a0a0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #8a5050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .close-cart-btn:hover {
+            background: #b85c5c;
+            color: white;
+            border-color: #b85c5c;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.2rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: #a07070;
+            padding: 3rem 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid #f0e0e0;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .cart-item-img {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-item-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #2a1a1a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-item-subtotal {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 300;
+            color: #b85c5c;
+            margin-top: 0.15rem;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid #e0c8c8;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            color: #8a5050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .qty-btn:hover {
+            background: #2a1a1a;
+            color: white;
+            border-color: #2a1a1a;
+        }
+
+        .qty-num {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 18px;
+            text-align: center;
+            color: #2a1a1a;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #c08080;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.3rem;
+            opacity: 0.55;
+            transition: opacity 0.15s;
+        }
+
+        .remove-btn:hover {
+            opacity: 1;
+            color: #b85c5c;
+        }
+
+        .cart-footer {
+            padding: 1.2rem 1.5rem;
+            border-top: 1px solid #f0e0e0;
+            background: #fffaf7;
+            flex-shrink: 0;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+        }
+
+        .cart-total-label {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: #8a5050;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .cart-total-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: #2a1a1a;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #2a1a1a;
+            color: #fdf6ec;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.18s;
+            margin-bottom: 0.6rem;
+        }
+
+        .checkout-btn:hover {
+            background: #b85c5c;
+        }
+
+        .clear-btn {
+            width: 100%;
+            background: transparent;
+            color: #a07070;
+            border: 1px solid #e0c8c8;
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 300;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .clear-btn:hover {
+            border-color: #b85c5c;
+            color: #b85c5c;
+        }
+
+        .cart-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(42, 26, 26, 0.45);
+            z-index: 199;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cart-overlay.show {
+            opacity: 1;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            background: #2a1a1a;
+            color: #fdf6ec;
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), opacity 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 900px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .menu-grid.cart-open {
+                margin-right: 0;
+            }
+
+            .cart-panel {
+                width: 100%;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-left: none;
+                border-radius: 20px 20px 0 0;
+                transform: translateY(100%);
+                max-height: 85vh;
+            }
+
+            .cart-panel.open {
+                transform: translateY(0);
+            }
+
+            .cart-overlay {
+                display: block;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <h1>Molly Tea <img src="images/logo.png" alt="Molly Tea Logo"
+                    style="width:50px;height:50px;position:relative;top:10px;" /></h1>
+        </div>
+    </header>
+    <nav>
+        <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul id="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <div class="cart-toggle-bar">
+                <button class="cart-toggle-btn" onclick="toggleCart()">
+                    🛒 Cart
+                    <span class="cart-badge hidden" id="cartBadge">0</span>
+                </button>
+            </div>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+    </nav>
+
+    <h1 class="page-heading">Menu</h1>
+
+    <div class="menu-grid" id="menu-grid"></div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+            <h2>Your Order</h2>
+            <button class="close-cart-btn" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer" id="cartFooter" style="display:none">
+            <div class="cart-total-row">
+                <span class="cart-total-label">Total</span>
+                <span class="cart-total-amount" id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn">Place Order</button>
+            <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <footer>
+        <div class="container">
+            <div>
+                <h3>Business Hours</h3>
+                <p>Monday - Friday: 9:00 AM - 9:00 PM</p>
+                <p>Saturday - Sunday: 10:00 AM - 10:00 PM</p>
+            </div>
+            <div>
+                <h3>Social Media</h3>
+                <p><a href="https://www.instagram.com/mollytea_global/">Instagram</a></p>
+                <p><a
+                        href="https://www.douyin.com/user/MS4wLjABAAAA_Ru-9VC248Ojr5IiOSsab9L-AK68vwXuS57Ar2aiDTC-alnEKDCBsjv2NRge1_rG">Douyin</a>
+                </p>
+            </div>
+        </div>
+        <hr style="color:#FFFFFF;" />
+        <p>&copy; 2026 Molly Tea. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="menu.js"></script>
+</body>
+
+</html>
