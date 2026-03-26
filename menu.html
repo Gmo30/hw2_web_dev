@@ -19,6 +19,7 @@
             font-weight: 300;
             letter-spacing: 0.04em;
         }
+
         .cart-toggle-bar {
             padding: 0.6rem 2rem;
             display: flex;
@@ -510,6 +511,11 @@
 
             .cart-overlay {
                 display: block;
+                pointer-events: none;
+            }
+
+            .cart-overlay.show {
+                pointer-events: auto;
             }
         }
 
@@ -540,12 +546,6 @@
         </button>
         <ul id="nav-menu">
             <li><a href="index.html">Home</a></li>
-            <div class="cart-toggle-bar">
-                <button class="cart-toggle-btn" onclick="toggleCart()">
-                    🛒 Cart
-                    <span class="cart-badge hidden" id="cartBadge">0</span>
-                </button>
-            </div>
             <li><a href="menu.html">Menu</a></li>
             <li><a href="about.html">About Us</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -554,6 +554,13 @@
     </nav>
 
     <h1 class="page-heading">Menu</h1>
+    <div class="cart-toggle-bar">
+        <button class="cart-toggle-btn" onclick="toggleCart()">
+            🛒 Cart
+            <span class="cart-badge hidden" id="cartBadge">0</span>
+        </button>
+    </div>
+
 
     <div class="menu-grid" id="menu-grid"></div>
 
@@ -597,6 +604,7 @@
     </footer>
 
     <script type="module" src="menu.js"></script>
+    <script src="hamburger.js"></script>
 </body>
 
 </html>
